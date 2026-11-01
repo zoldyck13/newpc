@@ -1,7 +1,6 @@
 
 param(
-	[string]$SourcePath = "\\192.168.13.26\IT\company",
-	[string]$SourcePath2 = "\\192.168.13.26\IT\company\dlls"
+	[string]$SourcePath = "\\192.168.13.26\IT\company" 
 )
 
 
@@ -12,6 +11,7 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 }
 
 $RegistryPath = "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters"
+$SourcePath2 = "\\192.168.13.26\IT\company\dlls"
 
 if (!(Test-Path $RegistryPath)) {
     New-Item -Path $RegistryPath -Force | Out-Null
