@@ -1,6 +1,6 @@
 
 param(
-	[string]$SourcePath = "\\192.168.13.26\IT\company"
+	[string]$SourcePath = "\\192.168.13.26\IT\company",
 	[string]$SourcePath2 = "\\192.168.13.26\IT\company\dlls"
 )
 
