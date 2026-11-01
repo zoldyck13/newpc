@@ -78,7 +78,7 @@ $PublicDesktop = [Environment]::GetFolderPath('CommonDesktopDirectory')
 $WScriptShell = New-Object -ComObject WScript.Shell
 
 $Shortcuts = @(
-    @{ Name = "Correspondences APP"; Target = "$DestinationPath\Correspondences_APP\MASDAR_OCMA.exe" },
+    @{ Name = "Correspondences APP"; Target = "$DestinationPath\Correspondences_APP\MASDAR_OCMS.exe" },
     @{ Name = "Diamond Sell";        Target = "$DestinationPath\dimond sell\MASDAR_RCS.exe" },
     @{ Name = "Empire Sell";         Target = "$DestinationPath\Empire_Sell\MASDAR_RCS.exe" },
     @{ Name = "Project Management";  Target = "$DestinationPath\project managemant\MASDAR_MANAGEMENT.exe" },
