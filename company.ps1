@@ -53,3 +53,10 @@ if (Test-Path $SourcePathFonts) {
 } else {
     Write-Host "[!] Fonts folder not found at: $SourcePathFonts" -ForegroundColor Yellow
 }
+
+$UserLocalePath = "HKCU:\Control Panel\International"
+Set-ItemProperty -Path $UserLocalePath -Name "sShortDate" -Value "yyyy-MM-dd"
+Set-ItemProperty -Path $UserLocalePath -Name "sLongDate" -Value "dddd, d MMMM, yyyy"
+Set-ItemProperty -Path $UserLocalePath -Name "sTimeFormat" -Value "HH:mm:ss"
+Set-ItemProperty -Path $UserLocalePath -Name "sShortTime" -Value "hh:mm tt"
+Write-Host "[*] Date and Time formats updated successfully!" -ForegroundColor Green
