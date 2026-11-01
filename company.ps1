@@ -37,25 +37,35 @@ if (!(Test-Path -Path $DestinationPath)) {
     Write-Host "Destination folder already exists." -ForegroundColor Yellow
 }
 
-robocopy $SourcePath $DestinationPath /E /COPY:DAT /R:3 /W:3
-Write-Host "[*] Copy process completed!" -ForegroundColor Green
+$MainAppCheck = "$DestinationPath\Correspondences_APP\MASDAR_OCMA.exe"
+if (!(Test-Path $MainAppCheck)) {
+    Write-Host "[*] Starting main files copy process..." -ForegroundColor Cyan
+    robocopy $SourcePath $DestinationPath /E /COPY:DAT /R:3 /W:3 | Out-Null
+    Write-Host "[*] Copy process completed!" -ForegroundColor Green
+} else {
+    Write-Host "[*] Main application files already exist. Skipping copy process." -ForegroundColor Yellow
+}
 
-robocopy $SourcePath2 $DestinationPath2 /E /COPY:DAT /R:3 /W:3
-Write-Host "[*] Copy process completed!" -ForegroundColor Green
+Write-Host "[*] Checking and copying DLLs if needed..." -ForegroundColor Cyan
+robocopy $SourcePath2 $DestinationPath2 /E /COPY:DAT /XX /R:3 /W:3 | Out-Null
+Write-Host "[*] DLLs check/copy process completed!" -ForegroundColor Green
 
-# قسم تثبيت الخطوط تلقائياً
 if (Test-Path $SourcePathFonts) {
     $FontsFolder = (New-Object -ComObject Shell.Application).Namespace(0x14)
     Get-ChildItem -Path $SourcePathFonts -Include *.ttf, *.otf, *.fon -Recurse | ForEach-Object {
-        $FontsFolder.CopyHere($_.FullName, 16)
-        Write-Host "[*] Installed Font: $($_.Name)" -ForegroundColor Green
+        $FontTarget = "C:\Windows\Fonts\$($_.Name)"
+        if (!(Test-Path $FontTarget)) {
+            $FontsFolder.CopyHere($_.FullName, 16)
+            Write-Host "[*] Installed Font: $($_.Name)" -ForegroundColor Green
+        } else {
+            Write-Host "[~] Font already exists (Skipped): $($_.Name)" -ForegroundColor DarkGray
+        }
     }
     Write-Host "[*] Fonts installation process completed!" -ForegroundColor Green
 } else {
     Write-Host "[!] Fonts folder not found at: $SourcePathFonts" -ForegroundColor Yellow
 }
 
-# قسم تعديل صيغ التاريخ والوقت
 $UserLocalePath = "HKCU:\Control Panel\International"
 Set-ItemProperty -Path $UserLocalePath -Name "sShortDate" -Value "yyyy-MM-dd"
 Set-ItemProperty -Path $UserLocalePath -Name "sLongDate" -Value "dddd, d MMMM, yyyy"
@@ -82,7 +92,7 @@ foreach ($sc in $Shortcuts) {
         $Shortcut.TargetPath = $sc.Target
         $Shortcut.WorkingDirectory = [System.IO.Path]::GetDirectoryName($sc.Target)
         $Shortcut.Save()
-        Write-Host "[*] Created shortcut for: $($sc.Name)" -ForegroundColor Green
+        Write-Host "[*] Created/Verified shortcut for: $($sc.Name)" -ForegroundColor Green
     } else {
         Write-Host "[!] Target file not found for shortcut: $($sc.Name) at $($sc.Target)" -ForegroundColor Yellow
     }
