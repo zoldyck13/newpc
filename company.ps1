@@ -1,6 +1,4 @@
-
-$SourcePath = "\\192.168.13.26\IT\company" 
-
+$SourcePath = "\\192.168.13.26\IT\company"  
 
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     Write-Host "RUN THE SCRIPT IN ADMIN MODE!!" -ForegroundColor Red
@@ -10,6 +8,7 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 
 $RegistryPath = "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters"
 $SourcePath2 = "\\192.168.13.26\IT\company\dlls"
+$SourcePathFonts = "\\192.168.13.26\IT\company\fonts"
 
 if (!(Test-Path $RegistryPath)) {
     New-Item -Path $RegistryPath -Force | Out-Null
@@ -39,10 +38,18 @@ if (!(Test-Path -Path $DestinationPath)) {
 }
 
 robocopy $SourcePath $DestinationPath /E /COPY:DAT /R:3 /W:3
-
 Write-Host "[*] Copy process completed!" -ForegroundColor Green
 
 robocopy $SourcePath2 $DestinationPath2 /E /COPY:DAT /R:3 /W:3
 Write-Host "[*] Copy process completed!" -ForegroundColor Green
 
-
+if (Test-Path $SourcePathFonts) {
+    $FontsFolder = (New-Object -ComObject Shell.Application).Namespace(0x14)
+    Get-ChildItem -Path $SourcePathFonts -Include *.ttf, *.otf, *.fon -Recurse | ForEach-Object {
+        $FontsFolder.CopyHere($_.FullName, 16)
+        Write-Host "[*] Installed Font: $($_.Name)" -ForegroundColor Green
+    }
+    Write-Host "[*] Fonts installation process completed!" -ForegroundColor Green
+} else {
+    Write-Host "[!] Fonts folder not found at: $SourcePathFonts" -ForegroundColor Yellow
+}
