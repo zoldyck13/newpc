@@ -55,6 +55,7 @@ if (Test-Path $SourcePathFonts) {
     Write-Host "[!] Fonts folder not found at: $SourcePathFonts" -ForegroundColor Yellow
 }
 
+# قسم تعديل صيغ التاريخ والوقت
 $UserLocalePath = "HKCU:\Control Panel\International"
 Set-ItemProperty -Path $UserLocalePath -Name "sShortDate" -Value "yyyy-MM-dd"
 Set-ItemProperty -Path $UserLocalePath -Name "sLongDate" -Value "dddd, d MMMM, yyyy"
@@ -62,7 +63,29 @@ Set-ItemProperty -Path $UserLocalePath -Name "sTimeFormat" -Value "HH:mm:ss"
 Set-ItemProperty -Path $UserLocalePath -Name "sShortTime" -Value "hh:mm tt"
 Write-Host "[*] Date and Time formats updated successfully!" -ForegroundColor Green
 
-$DesktopPath = "HKCU:\Control Panel\Desktop"
-Set-ItemProperty -Path $DesktopPath -Name "LogPixels" -Value 96 -PropertyType DWORD
-Set-ItemProperty -Path $DesktopPath -Name "Win8DpiScaling" -Value 1 -PropertyType DWORD
-Write-Host "[*] Screen scaling set to 100% successfully!" -ForegroundColor Green
+
+$PublicDesktop = [Environment]::GetFolderPath('CommonDesktopDirectory')
+$WScriptShell = New-Object -ComObject WScript.Shell
+
+$Shortcuts = @(
+    @{ Name = "Correspondences APP"; Target = "$DestinationPath\Correspondences_APP\MASDAR_OCMA.exe" },
+    @{ Name = "Diamond Sell";        Target = "$DestinationPath\dimond sell\MASDAR_RCS.exe" },
+    @{ Name = "Empire Sell";         Target = "$DestinationPath\Empire_Sell\MASDAR_RCS.exe" },
+    @{ Name = "Project Management";  Target = "$DestinationPath\project managemant\MASDAR_MANAGEMENT.exe" },
+    @{ Name = "Sell DownTown";       Target = "$DestinationPath\sell_DownTown\MASDAR_RCS.exe" }
+)
+
+foreach ($sc in $Shortcuts) {
+    if (Test-Path $sc.Target) {
+        $ShortcutPath = Join-Path $PublicDesktop "$($sc.Name).lnk"
+        $Shortcut = $WScriptShell.CreateShortcut($ShortcutPath)
+        $Shortcut.TargetPath = $sc.Target
+        $Shortcut.WorkingDirectory = [System.IO.Path]::GetDirectoryName($sc.Target)
+        $Shortcut.Save()
+        Write-Host "[*] Created shortcut for: $($sc.Name)" -ForegroundColor Green
+    } else {
+        Write-Host "[!] Target file not found for shortcut: $($sc.Name) at $($sc.Target)" -ForegroundColor Yellow
+    }
+}
+
+Write-Host "[*] All processes completed successfully!" -ForegroundColor Green
