@@ -43,6 +43,7 @@ Write-Host "[*] Copy process completed!" -ForegroundColor Green
 robocopy $SourcePath2 $DestinationPath2 /E /COPY:DAT /R:3 /W:3
 Write-Host "[*] Copy process completed!" -ForegroundColor Green
 
+# قسم تثبيت الخطوط تلقائياً
 if (Test-Path $SourcePathFonts) {
     $FontsFolder = (New-Object -ComObject Shell.Application).Namespace(0x14)
     Get-ChildItem -Path $SourcePathFonts -Include *.ttf, *.otf, *.fon -Recurse | ForEach-Object {
@@ -60,3 +61,8 @@ Set-ItemProperty -Path $UserLocalePath -Name "sLongDate" -Value "dddd, d MMMM, y
 Set-ItemProperty -Path $UserLocalePath -Name "sTimeFormat" -Value "HH:mm:ss"
 Set-ItemProperty -Path $UserLocalePath -Name "sShortTime" -Value "hh:mm tt"
 Write-Host "[*] Date and Time formats updated successfully!" -ForegroundColor Green
+
+$DesktopPath = "HKCU:\Control Panel\Desktop"
+Set-ItemProperty -Path $DesktopPath -Name "LogPixels" -Value 96 -PropertyType DWORD
+Set-ItemProperty -Path $DesktopPath -Name "Win8DpiScaling" -Value 1 -PropertyType DWORD
+Write-Host "[*] Screen scaling set to 100% successfully!" -ForegroundColor Green
