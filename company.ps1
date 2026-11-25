@@ -1,4 +1,4 @@
-$SourcePath = "\\192.168.13.26\IT\company"  
+$SourcePath = "\\192.168.13.25\IT\company"  
 
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     Write-Host "RUN THE SCRIPT IN ADMIN MODE!!" -ForegroundColor Red
