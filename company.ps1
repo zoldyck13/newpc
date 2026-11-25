@@ -7,8 +7,8 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 }
 
 $RegistryPath = "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters"
-$SourcePath2 = "\\192.168.13.26\IT\company\dlls"
-$SourcePathFonts = "\\192.168.13.26\IT\company\fonts"
+$SourcePath2 = "\\192.168.13.25\IT\company\dlls"
+$SourcePathFonts = "\\192.168.13.25\IT\company\fonts"
 
 if (!(Test-Path $RegistryPath)) {
     New-Item -Path $RegistryPath -Force | Out-Null
